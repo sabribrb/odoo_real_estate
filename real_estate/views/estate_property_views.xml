@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!-- vista de lista custom-->
+	<record id="estate_property_custom_list" model="ir.ui.view">
+		<field name="name">estate.property.list</field>
+		<field name="model">estate.property</field>
+		<field name="arch" type="xml">
+			<list string="Propiedades">
+				<field name="name"/>
+				<field name="tags_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="Etiquetas"/>
+				<field name="postcode"/>
+				<field name="bedrooms"/>
+				<field name="living_area"/>
+				<field name="expected_price"/>
+				<field name="selling_price"/>
+				<field name="date_availability"/>
+			</list>
+		</field>
+	</record>
+	<record id="estate_property_custom_form" model="ir.ui.view">
+		<field name="name">estate.property.form</field>
+		<field name="model">estate.property</field>
+		<field name="arch" type="xml">
+			<form string="Propiedades">
+				<sheet>
+				<header>
+                	<field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+            	</header>
+                <div class="oe_title">
+                    <label for="name" string="Nombre de la propiedad" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="Ej. Casa de campo"/>
+                    </h1>
+					<field name="tags_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="Etiquetas"/>
+                </div>
+
+                <group>
+                    <!-- Columna Izquierda -->
+                    <group>
+						<field name="property_type_id" string="Tipo de propiedad"/>
+                        <field name="postcode"/>
+                        <field name="date_availability" string="Fecha de disponibilidad"/>
+                    </group>
+                    <!-- Columna Derecha -->
+                    <group>
+                        <field name="expected_price"/>
+                        <field name="selling_price"/>
+						<field name="best_offer_price" string="Mejor oferta" readonly="1"/>
+                    </group>
+                </group>
+
+                <!-- 3. LA NOTEBOOK (Pestañas) -->
+                <notebook>
+                    <!-- Primera pestaña: Descripción y detalles -->
+                    <page string="Descripción">
+                        <group>
+                            <!-- Grupo interior izquierda (Datos de la casa) -->
+                            <group string="Interiores">
+                                <field name="description"/>
+                                <field name="bedrooms"/>
+                                <field name="living_area"/>
+                                <field name="facades"/>
+                                <field name="garage"/> <!-- Campo booleano si tiene garaje -->
+                            </group>
+                            
+                            <!-- Grupo interior derecha (Datos del jardín) -->
+                            <group string="Exteriores / Jardín">
+                                <field name="garden"/> <!-- Campo booleano si tiene jardín -->
+                                <field name="garden_area"/>
+                                <field name="garden_orientation"/>
+								<field name="total_area"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+				<!-- Mas Info		-->
+				<notebook>
+					<page string="Más información">
+						<group>
+							<field name='salesman_id' string="Vendedor"/>
+							<field name='buyer_id' string="Comprador"/>
+						</group>
+					</page>
+					<page string="Ofertas">
+						<field name="offer_ids">
+							<list string="Ofertas de Propiedades" editable="bottom">
+								<field name="price"/>
+								<field name="status"/>
+								<field name="partner_id"/>
+							</list>
+						</field>
+					</page>
+				</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<!-- Vista de búsqueda -->
+	<record id="estate_property_search" model="ir.ui.view">
+		<field name="name">estate.property.search</field>
+		<field name="model">estate.property</field>
+		<field name="arch" type="xml">
+			<search string="Propiedades">
+				<!-- Campos de búsqueda -->
+				<field name="name"/>
+				<field name="postcode"/>
+				<field name="expected_price"/>
+				<field name="bedrooms"/>
+				<field name="living_area"/>
+				<field name="facades"/>
+				
+				<!-- Filtro de dominio -->
+				<!-- Corrección usando context.get('uid') -->
+				<filter string="Creados por mí" name="created_by_me" domain="[('create_uid', '=', context.get('uid'))]"/>
+				<filter string="Propiedades disponibles" name="available" domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]" />
+				
+				<!-- Contenedor de Agrupación -->
+				<group>
+					<filter string="Codigo postal" name="postcode" context="{'group_by': 'postcode'}"/>
+					<filter string="Creado por" name="user" context="{'group_by': 'create_uid'}"/> 
+					<filter string="Mes de creación" name="create_date" context="{'group_by': 'create_date:month'}"/>
+					<filter string="Estado" name="state" context="{'group_by': 'state'}"/>
+				</group>
+			</search>
+		</field>
+	</record>
+
+	<record id="estate_property_action" model="ir.actions.act_window">
+		<field name="name">Propiedades</field>
+		<field name="res_model">estate.property</field>
+		<field name="view_mode">list,form</field>
+		<field name="search_view_id" ref="estate_property_search"/>
+	</record>
+
+</odoo>

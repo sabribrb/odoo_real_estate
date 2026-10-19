@@ -1,0 +1,12 @@
+<odoo>
+	<menuitem id="menu_real_estate_root" name="Inmobiliaria"/>
+	
+	<menuitem id="menu_real_estate_property" name="Anuncios" parent="menu_real_estate_root"/>
+	<menuitem id="menu_real_estate_property_offers" name="Ofertas" parent="menu_real_estate_property" action="estate_property_offer_action"/>
+
+	<menuitem id="menu_real_estate_property_settings" name="Ajustes" parent="menu_real_estate_root"/>
+	<menuitem id="menu_real_estate_property_tags" name="Etiquetas" parent="menu_real_estate_property_settings" action="estate_property_tag_action"/>
+
+	<menuitem id="menu_real_estate_property_type" name="Tipos de Propiedades" parent="menu_real_estate_root" action="estate_property_type_action"/>
+	<menuitem id="menu_real_estate_property_action" name="Propiedades" parent="menu_real_estate_property" action="estate_property_action"/>
+</odoo>
